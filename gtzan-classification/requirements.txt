@@ -1,0 +1,35 @@
+# GTZAN Music Genre Classification Requirements
+# Compatible with Python 3.8+
+
+# Deep Learning Framework
+tensorflow==2.15.0
+
+# Deep Learning Framework
+# For M1/M2/M3 Macs: TensorFlow with metal acceleration
+tensorflow-macos==2.15.0
+tensorflow-metal==1.1.0  # GPU acceleration for Apple Silicon
+
+# Audio Processing
+librosa==0.10.1
+soundfile==0.12.1
+audioread==3.0.1
+
+# Numerical Computing
+numpy==1.24.3
+scipy==1.11.4
+
+# Machine Learning & Data Processing
+scikit-learn==1.3.2
+
+# Visualization
+matplotlib==3.8.2
+seaborn==0.13.0
+
+# Utilities
+pandas==2.1.4
+tqdm==4.66.1
+
+# Optional: For faster audio processing
+numba==0.58.1
+# Audio file format support (for Mac)
+ffmpeg-python==0.2.0
