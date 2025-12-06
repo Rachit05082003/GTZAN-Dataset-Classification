@@ -1,0 +1,7 @@
+{
+  "test_accuracy": 0.63,
+  "training_time_minutes": 1.5909060517946878,
+  "total_parameters": 168522,
+  "avg_inference_ms": 23.37899684906006,
+  "attention_entropy": 2.5823891162872314
+}

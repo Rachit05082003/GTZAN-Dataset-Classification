@@ -1,0 +1,18 @@
+Test Accuracy: 0.3532
+
+              precision    recall  f1-score   support
+
+       blues      0.000     0.000     0.000        47
+   classical      0.949     0.787     0.860        47
+     country      0.000     0.000     0.000        49
+       disco      0.339     0.447     0.385        47
+      hiphop      0.000     0.000     0.000        46
+        jazz      0.000     0.000     0.000        45
+       metal      0.361     1.000     0.530        48
+         pop      0.491     0.565     0.525        46
+      reggae      1.000     0.043     0.083        46
+        rock      0.177     0.653     0.278        49
+
+    accuracy                          0.353       470
+   macro avg      0.332     0.350     0.266       470
+weighted avg      0.330     0.353     0.267       470
