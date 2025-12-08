@@ -4,10 +4,9 @@
 # Deep Learning Framework
 tensorflow==2.15.0
 
-# Deep Learning Framework
-# For M1/M2/M3 Macs: TensorFlow with metal acceleration
-tensorflow-macos==2.15.0
-tensorflow-metal==1.1.0  # GPU acceleration for Apple Silicon
+# For M1/M2/M3 Macs: TensorFlow with metal acceleration (use instead of tensorflow above)
+# tensorflow-macos==2.15.0
+# tensorflow-metal==1.1.0
 
 # Audio Processing
 librosa==0.10.1
@@ -20,6 +19,7 @@ scipy==1.11.4
 
 # Machine Learning & Data Processing
 scikit-learn==1.3.2
+scikit-image==0.24.0
 
 # Visualization
 matplotlib==3.8.2
@@ -29,7 +29,8 @@ seaborn==0.13.0
 pandas==2.1.4
 tqdm==4.66.1
 
+# Web Demo
+flask==3.1.2
+
 # Optional: For faster audio processing
 numba==0.58.1
-# Audio file format support (for Mac)
-ffmpeg-python==0.2.0

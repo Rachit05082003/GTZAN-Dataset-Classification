@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTZAN Genre Classifier</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f1f5f9;
+            --muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, var(--bg) 0%, #1a1a2e 100%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--muted);
+            margin-bottom: 2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .upload-zone {
+            background: var(--card);
+            border: 2px dashed #475569;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .upload-zone input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .upload-icon {
+            font-size: 2.5rem;
+        }
+
+        .file-name {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(99, 102, 241, 0.2);
+            border-radius: 8px;
+            display: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 1rem;
+            background: linear-gradient(90deg, var(--primary), #8b5cf6);
+            color: white;
+            transition: transform 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results {
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .models-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .model-card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .model-name {
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .genre-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #34d399, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .confidence {
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .prediction-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .prediction-label {
+            width: 80px;
+            text-transform: capitalize;
+        }
+
+        .prediction-bar-bg {
+            flex: 1;
+            height: 18px;
+            background: #334155;
+            border-radius: 9px;
+            overflow: hidden;
+            margin-left: 0.5rem;
+        }
+
+        .prediction-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), #8b5cf6);
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: width 0.5s ease;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #334155;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🎵 GTZAN Genre Classifier</h1>
+    <p class="subtitle">Upload audio to get predictions from all 3 models</p>
+
+    <div class="container">
+        <div class="upload-zone" id="uploadZone">
+            <input type="file" id="fileInput" accept=".wav,.mp3,.ogg,.flac,.m4a">
+            <div class="upload-icon">🎧</div>
+            <div>Drop audio file here or click to browse</div>
+            <div class="file-name" id="fileName"></div>
+        </div>
+
+        <button class="btn" id="predictBtn" disabled>🔮 Predict Genre</button>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Analyzing with all models...</p>
+        </div>
+
+        <div class="error" id="error"></div>
+
+        <div class="results" id="results">
+            <div class="models-grid" id="modelsGrid"></div>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const fileName = document.getElementById('fileName');
+        const predictBtn = document.getElementById('predictBtn');
+        const loading = document.getElementById('loading');
+        const error = document.getElementById('error');
+        const results = document.getElementById('results');
+        const modelsGrid = document.getElementById('modelsGrid');
+
+        let selectedFile = null;
+
+        document.getElementById('uploadZone').addEventListener('dragover', e => e.preventDefault());
+        document.getElementById('uploadZone').addEventListener('drop', e => {
+            e.preventDefault();
+            if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+        });
+
+        fileInput.addEventListener('change', e => {
+            if (e.target.files.length) handleFile(e.target.files[0]);
+        });
+
+        function handleFile(file) {
+            selectedFile = file;
+            fileName.textContent = `📁 ${file.name}`;
+            fileName.style.display = 'block';
+            predictBtn.disabled = false;
+            results.style.display = 'none';
+            error.style.display = 'none';
+        }
+
+        predictBtn.addEventListener('click', async () => {
+            if (!selectedFile) return;
+
+            loading.style.display = 'block';
+            results.style.display = 'none';
+            error.style.display = 'none';
+            predictBtn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            try {
+                const response = await fetch('/predict', { method: 'POST', body: formData });
+                const data = await response.json();
+
+                if (data.error) throw new Error(data.error);
+                displayResults(data.predictions);
+            } catch (err) {
+                error.textContent = `❌ ${err.message}`;
+                error.style.display = 'block';
+            } finally {
+                loading.style.display = 'none';
+                predictBtn.disabled = false;
+            }
+        });
+
+        function displayResults(predictions) {
+            modelsGrid.innerHTML = '';
+
+            for (const [modelName, data] of Object.entries(predictions)) {
+                const card = document.createElement('div');
+                card.className = 'model-card';
+
+                const sorted = Object.entries(data.all).sort((a, b) => b[1] - a[1]);
+
+                card.innerHTML = `
+                    <div class="model-name">${modelName}</div>
+                    <div class="genre-name">${data.genre}</div>
+                    <div class="confidence">${data.confidence.toFixed(1)}% confidence</div>
+                    <div class="predictions">
+                        ${sorted.map(([genre, conf]) => `
+                            <div class="prediction-item">
+                                <span class="prediction-label">${genre}</span>
+                                <div class="prediction-bar-bg">
+                                    <div class="prediction-bar" style="width: ${conf}%">${conf.toFixed(0)}%</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                modelsGrid.appendChild(card);
+            }
+
+            results.style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>
