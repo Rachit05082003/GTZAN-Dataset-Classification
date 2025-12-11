@@ -201,12 +201,12 @@ def load_models():
                 if 'norm_path' in config and os.path.exists(config['norm_path']):
                     params = np.load(config['norm_path'])
                     norm_params[name] = {'mean': params['mean'], 'std': params['std']}
-                    print(f"  ✅ {name} (with norm params)")
+                    print(f" O  {name} (with norm params)")
                 else:
-                    print(f"  ✅ {name}")
+                    print(f"  O {name}")
                     
             except Exception as e:
-                print(f"  ❌ {name}: {e}")
+                print(f"  X {name}: {e}")
     
     print(f"Loaded {len(models)} models")
 
@@ -290,5 +290,5 @@ def predict():
 if __name__ == '__main__':
     load_models()
     print("\n🎵 GTZAN Genre Classification Demo")
-    print("🌐 Open http://localhost:5001\n")
+    print(" Open http://localhost:5001\n")
     app.run(debug=False, host='0.0.0.0', port=5001)
